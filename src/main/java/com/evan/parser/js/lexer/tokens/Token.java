@@ -59,4 +59,15 @@ public abstract class Token {
 		this.startPosition = startPosition;
 	}
 
+	public abstract Object getValue();
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return String.format("%-10s: %10s %10s", getType(), getValue(), getStartPosition());
+	}
 }

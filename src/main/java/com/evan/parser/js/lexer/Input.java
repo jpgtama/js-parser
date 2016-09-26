@@ -3,9 +3,6 @@
  */
 package com.evan.parser.js.lexer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author evan
@@ -65,25 +62,6 @@ public class Input {
 		System.arraycopy(this.charArray, start, result, 0, end - start);
 		// return this.charList.substring(start, end);
 		return result;
-	}
-
-	public static void main(String[] args) {
-		List<Character> charList = new ArrayList<Character>();
-		charList.add('e');
-		charList.add('x');
-		charList.add('i');
-		charList.add('t');
-
-		int start = 0;
-		int end = 4;
-
-		char[] result = new char[end - start];
-
-		char[] src = new char[] { 'e', 'x', 'i', 't' };
-		System.arraycopy(src, start, result, 0, end - start);
-
-		System.out.println(Arrays.toString(result));
-
 	}
 
 	/**

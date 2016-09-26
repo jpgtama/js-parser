@@ -36,14 +36,4 @@ public class IdToken extends Token {
 		this.value = value;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "IdToken [getValue()=" + getValue() + ", getType()=" + getType() + ", getStartPosition()=" + getStartPosition() + "]";
-	}
-
 }

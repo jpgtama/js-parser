@@ -19,7 +19,7 @@ public class SymbolToken extends Token {
 	/**
 	 * @return the value
 	 */
-	public char getValue() {
+	public Character getValue() {
 		return value;
 	}
 
@@ -29,16 +29,6 @@ public class SymbolToken extends Token {
 	 */
 	public void setValue(char value) {
 		this.value = value;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "SymbolToken [value=" + value + ", getValue()=" + getValue() + ", getType()=" + getType() + ", getStartPosition()=" + getStartPosition() + "]";
 	}
 
 }

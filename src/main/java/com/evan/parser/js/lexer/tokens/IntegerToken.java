@@ -19,7 +19,7 @@ public class IntegerToken extends Token {
 	/**
 	 * @return the value
 	 */
-	public long getValue() {
+	public Long getValue() {
 		return value;
 	}
 
@@ -29,16 +29,6 @@ public class IntegerToken extends Token {
 	 */
 	public void setValue(long value) {
 		this.value = value;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "IntegerToken [getValue()=" + getValue() + ", getType()=" + getType() + ", getStartPosition()=" + getStartPosition() + "]";
 	}
 
 }

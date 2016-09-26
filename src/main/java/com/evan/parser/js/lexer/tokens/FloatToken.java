@@ -19,7 +19,7 @@ public class FloatToken extends Token {
 	/**
 	 * @return the value
 	 */
-	public double getValue() {
+	public Double getValue() {
 		return value;
 	}
 
@@ -29,16 +29,6 @@ public class FloatToken extends Token {
 	 */
 	public void setValue(double value) {
 		this.value = value;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "FloatToken [getValue()=" + getValue() + ", getType()=" + getType() + ", getStartPosition()=" + getStartPosition() + "]";
 	}
 
 }
