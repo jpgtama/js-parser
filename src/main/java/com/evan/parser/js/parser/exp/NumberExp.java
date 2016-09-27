@@ -7,20 +7,21 @@ package com.evan.parser.js.parser.exp;
  * @author evan
  *
  */
-public class IdExp extends Exp {
-	private String value;
+public class NumberExp<T extends Number> extends Exp {
+
+	private T value;
 
 	/**
 	 * @param value
 	 */
-	public IdExp(String value) {
+	public NumberExp(T value) {
 		this.value = value;
 	}
 
 	/**
 	 * @return the value
 	 */
-	public String getValue() {
+	public T getValue() {
 		return value;
 	}
 
@@ -30,7 +31,7 @@ public class IdExp extends Exp {
 	 * @see com.evan.parser.js.parser.exp.Exp#interpret()
 	 */
 	@Override
-	public Object interpret() {
+	public T interpret() {
 		// TODO Auto-generated method stub
 		return null;
 	}

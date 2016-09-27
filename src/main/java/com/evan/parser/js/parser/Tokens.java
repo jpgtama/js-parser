@@ -54,6 +54,17 @@ public class Tokens {
 		return forward(null);
 	}
 
+	public Tokens back() {
+		return back(null);
+	}
+
+	public Tokens back(Integer n) {
+		n = n != null ? Math.max(n, 1) : 1;
+		this.index -= n;
+
+		return this;
+	}
+
 	public int length() {
 		return this.tokenList.size();
 	}

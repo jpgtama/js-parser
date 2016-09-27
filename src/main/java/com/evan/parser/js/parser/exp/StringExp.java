@@ -7,13 +7,14 @@ package com.evan.parser.js.parser.exp;
  * @author evan
  *
  */
-public class IdExp extends Exp {
+public class StringExp extends Exp {
+
 	private String value;
 
 	/**
 	 * @param value
 	 */
-	public IdExp(String value) {
+	public StringExp(String value) {
 		this.value = value;
 	}
 
@@ -30,7 +31,7 @@ public class IdExp extends Exp {
 	 * @see com.evan.parser.js.parser.exp.Exp#interpret()
 	 */
 	@Override
-	public Object interpret() {
+	public String interpret() {
 		// TODO Auto-generated method stub
 		return null;
 	}
