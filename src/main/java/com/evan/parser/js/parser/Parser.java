@@ -13,7 +13,10 @@ import com.evan.parser.js.lexer.tokens.StringToken;
 import com.evan.parser.js.lexer.tokens.SymbolToken;
 import com.evan.parser.js.lexer.tokens.Token;
 import com.evan.parser.js.lexer.tokens.TokenTypeEnum;
+import com.evan.parser.js.parser.exp.ArithmeticExp;
+import com.evan.parser.js.parser.exp.AssignExp;
 import com.evan.parser.js.parser.exp.Exp;
+import com.evan.parser.js.parser.exp.ExpListExp;
 import com.evan.parser.js.parser.exp.FunctionExp;
 import com.evan.parser.js.parser.exp.IdExp;
 import com.evan.parser.js.parser.exp.NumberExp;
@@ -50,7 +53,7 @@ public class Parser {
 		return getExpList(tokens);
 	}
 
-	private StringExp getStringExp(Tokens tokens) {
+	private static StringExp getStringExp(Tokens tokens) {
 		Token t = tokens.current();
 
 		if (t != null && t.getType() == TokenTypeEnum.STRING) {
@@ -63,7 +66,7 @@ public class Parser {
 		}
 	}
 
-	private NumberExp getNumberExp(Tokens tokens) {
+	private static NumberExp getNumberExp(Tokens tokens) {
 		Token t = tokens.current();
 
 		if (t != null) {
@@ -85,7 +88,7 @@ public class Parser {
 		}
 	}
 
-	private IdExp getIdExp(Tokens tokens) {
+	private static IdExp getIdExp(Tokens tokens) {
 		Token t = tokens.current();
 		if (t != null && t.getType() == TokenTypeEnum.ID) {
 			String value = ((IdToken) t).getValue();
@@ -98,18 +101,18 @@ public class Parser {
 
 	}
 
-	private FunctionExp getFunctionExp(Tokens tokens) {
+	private static FunctionExp getFunctionExp(Tokens tokens) {
 		// function = <id> ( '()' | ( '(' paramlist ')' ) )
 		IdExp id = getIdExp(tokens);
 
 		if (id != null) {
 			Token lb = tokens.current();
 
-			if (lb != null && lb instanceof SymbolToken && ((SymbolToken) lb).getValue() == '(') {
+			if (lb != null && lb instanceof SymbolToken && ((SymbolToken) lb).getValue().charValue() == '(') {
 				tokens.forward();
 
 				Token rb = tokens.next();
-				if (rb != null && rb instanceof SymbolToken && ((SymbolToken) rb).getValue() == ')') {
+				if (rb != null && rb instanceof SymbolToken && ((SymbolToken) rb).getValue().charValue() == ')') {
 					// no param
 					tokens.forward();
 					return new FunctionExp(id.getValue());
@@ -118,7 +121,7 @@ public class Parser {
 
 					if (paramlist != null && paramlist.size() > 0) {
 						rb = tokens.next();
-						if (rb != null && rb instanceof SymbolToken && ((SymbolToken) rb).getValue() == ')') {
+						if (rb != null && rb instanceof SymbolToken && ((SymbolToken) rb).getValue().charValue() == ')') {
 							tokens.forward();
 							return new FunctionExp(id.getValue(), paramlist);
 						} else {
@@ -138,7 +141,7 @@ public class Parser {
 		}
 	}
 
-	private List<Exp> getParamList(Tokens tokens) {
+	private static List<Exp> getParamList(Tokens tokens) {
 		// paramlist = exp (',' exp )*
 		Exp exp = getValueExp(tokens);
 
@@ -149,7 +152,7 @@ public class Parser {
 			while (tokens.hasNext()) {
 				Token cm = tokens.current();
 
-				if (cm instanceof SymbolToken && ((SymbolToken) cm).getValue() == ',') {
+				if (cm instanceof SymbolToken && ((SymbolToken) cm).getValue().charValue() == ',') {
 					tokens.forward();
 					Exp nextExp = getValueExp(tokens);
 
@@ -171,7 +174,7 @@ public class Parser {
 		}
 	}
 
-	private Exp getTerm(Tokens tokens) {
+	private static Exp getTerm(Tokens tokens) {
 		// Term = <string> | <数字> | Function | <变量> | “(”Exp”)”
 
 		StringExp string = getStringExp(tokens);
@@ -197,7 +200,8 @@ public class Parser {
 
 			Token next = tokens.current();
 
-			if (next != null && next instanceof SymbolToken && (((SymbolToken) next).getValue() == '(' || ((SymbolToken) next).getValue() == '=')) {
+			if (next != null && next instanceof SymbolToken
+					&& (((SymbolToken) next).getValue().charValue() == '(' || ((SymbolToken) next).getValue().charValue() == '=')) {
 				// do nothing
 				tokens.back();
 			} else {
@@ -207,14 +211,14 @@ public class Parser {
 
 		Token t = tokens.current();
 
-		if (t != null && t instanceof SymbolToken && ((SymbolToken) t).getValue() == '(') {
+		if (t != null && t instanceof SymbolToken && ((SymbolToken) t).getValue().charValue() == '(') {
 			tokens.forward();
 
 			Exp exp = getValueExp(tokens);
 
 			t = tokens.current();
 
-			if (t != null && t instanceof SymbolToken && ((SymbolToken) t).getValue() == ')') {
+			if (t != null && t instanceof SymbolToken && ((SymbolToken) t).getValue().charValue() == ')') {
 				tokens.forward();
 				return exp;
 			} else {
@@ -227,13 +231,140 @@ public class Parser {
 
 	}
 
-	private Exp getValueExp(Tokens tokens) {
-		return null;
+	private static Exp getFactor(Tokens tokens) {
+		// Factor = Term ((“*” | “/”) Term)*
+		Exp factor = getTerm(tokens);
+
+		if (factor != null) {
+			while (tokens.hasNext()) {
+				Token op = tokens.current();
+
+				if (op != null && op instanceof SymbolToken
+						&& (((SymbolToken) op).getValue().charValue() == '*' || ((SymbolToken) op).getValue().charValue() == '/')) {
+					tokens.forward();
+
+					Exp nextTerm = getTerm(tokens);
+
+					if (nextTerm != null) {
+						factor = new ArithmeticExp(((SymbolToken) op).getValue().toString(), factor, nextTerm);
+					} else {
+						throw new RuntimeException("need two operands for " + op.getValue());
+					}
+				} else {
+					break;
+				}
+
+			}
+
+		}
+
+		return factor;
+
+	}
+
+	private static Exp getValueExp(Tokens tokens) {
+		// Exp = Factor ((“+” | “-”) Factor)*
+		Exp exp = getFactor(tokens);
+
+		if (exp != null) {
+
+			while (tokens.hasNext()) {
+				Token op = tokens.current();
+
+				if (op != null && op instanceof SymbolToken
+						&& (((SymbolToken) op).getValue().charValue() == '+' || ((SymbolToken) op).getValue().charValue() == '-')) {
+					tokens.forward();
+
+					Exp factor = getFactor(tokens);
+
+					if (factor != null) {
+						exp = new ArithmeticExp(((SymbolToken) op).getValue().toString(), exp, factor);
+					} else {
+						throw new RuntimeException("need two operands for " + op.getValue());
+					}
+				} else {
+					break;
+				}
+
+			}
+		}
+
+		return exp;
+	}
+
+	private static Exp getAssignExp(Tokens tokens) {
+		// assignExp ::= <id> "=" <valueExp>
+		IdExp id = getIdExp(tokens);
+
+		if (id != null) {
+
+			Token eq = tokens.current();
+
+			if (eq != null && eq instanceof SymbolToken && ((SymbolToken) eq).getValue().charValue() == '=') {
+				tokens.forward();
+
+				Exp valueExp = getValueExp(tokens);
+
+				if (valueExp != null) {
+					return new AssignExp(id.getValue(), valueExp);
+				} else {
+					throw new RuntimeException("no value exp after =");
+				}
+
+			} else {
+				// TODO need to revert id exp
+				return null;
+			}
+
+		} else {
+			return null;
+		}
+
+	}
+
+	private static Exp getExp(Tokens tokens) {
+		// exp = valueExp | assignExp
+		Exp exp = getValueExp(tokens);
+
+		if (exp != null) {
+			return exp;
+		}
+
+		exp = getAssignExp(tokens);
+
+		return exp;
 	}
 
 	private static Exp getExpList(Tokens tokens) {
+		// expList = exp (, exp )*
+		ExpListExp ele = new ExpListExp();
 
-		return null;
+		Exp exp = getExp(tokens);
+
+		if (exp != null) {
+			ele.add(exp);
+
+			while (tokens.hasNext()) {
+				Token comma = tokens.current();
+
+				if (comma != null && comma instanceof SymbolToken && ((SymbolToken) comma).getValue().charValue() == ',') {
+					tokens.forward();
+
+					Exp ne = getExp(tokens);
+
+					if (ne != null) {
+						ele.add(ne);
+					} else {
+						throw new RuntimeException("no exp after ,");
+					}
+
+				} else {
+					throw new RuntimeException("no , after exp");
+				}
+			}
+
+		}
+
+		return ele;
 	}
-
 }

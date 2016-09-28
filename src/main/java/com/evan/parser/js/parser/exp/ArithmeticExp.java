@@ -9,7 +9,26 @@ package com.evan.parser.js.parser.exp;
  */
 public class ArithmeticExp extends Exp {
 
-	/* (non-Javadoc)
+	String op;
+
+	Exp left;
+	Exp right;
+
+	/**
+	 * @param op
+	 * @param left
+	 * @param right
+	 */
+	public ArithmeticExp(String op, Exp left, Exp right) {
+		super();
+		this.op = op;
+		this.left = left;
+		this.right = right;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.evan.parser.js.parser.exp.Exp#interpret()
 	 */
 	@Override
