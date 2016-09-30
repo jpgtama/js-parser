@@ -34,4 +34,14 @@ public class AssignExp extends Exp {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return String.format("(= %s %s)", name, valueExp.toString());
+	}
+
 }

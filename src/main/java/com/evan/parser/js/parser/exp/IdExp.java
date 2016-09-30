@@ -8,6 +8,7 @@ package com.evan.parser.js.parser.exp;
  *
  */
 public class IdExp extends Exp {
+
 	private String value;
 
 	/**
@@ -33,6 +34,16 @@ public class IdExp extends Exp {
 	public Object interpret() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return String.format("%s", value);
 	}
 
 }

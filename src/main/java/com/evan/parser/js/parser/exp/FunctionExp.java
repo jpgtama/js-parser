@@ -38,4 +38,24 @@ public class FunctionExp extends Exp {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+
+		StringBuffer sb = new StringBuffer();
+
+		for (Exp e : paramlist) {
+			sb.append(e.toString());
+			sb.append(' ');
+		}
+
+		sb.deleteCharAt(sb.length() - 1);
+
+		return String.format("(%s %s)", name, sb.toString());
+	}
+
 }

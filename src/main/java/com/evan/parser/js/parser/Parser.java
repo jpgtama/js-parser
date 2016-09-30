@@ -89,10 +89,18 @@ public class Parser {
 	}
 
 	private static IdExp getIdExp(Tokens tokens) {
+		return getIdExp(tokens, true);
+
+	}
+
+	private static IdExp getIdExp(Tokens tokens, boolean isForward) {
 		Token t = tokens.current();
 		if (t != null && t.getType() == TokenTypeEnum.ID) {
 			String value = ((IdToken) t).getValue();
-			tokens.forward();
+
+			if (isForward) {
+				tokens.forward();
+			}
 
 			return new IdExp(value);
 		} else {
@@ -103,7 +111,7 @@ public class Parser {
 
 	private static FunctionExp getFunctionExp(Tokens tokens) {
 		// function = <id> ( '()' | ( '(' paramlist ')' ) )
-		IdExp id = getIdExp(tokens);
+		IdExp id = getIdExp(tokens, false);
 
 		if (id != null) {
 			Token lb = tokens.current();

@@ -30,7 +30,12 @@ public class Tokens {
 	}
 
 	public Token current() {
-		return this.tokenList.get(this.index);
+		if (0 <= this.index && this.index < this.tokenList.size()) {
+			return this.tokenList.get(this.index);
+		} else {
+			return null;
+		}
+
 	}
 
 	public Token next() {
