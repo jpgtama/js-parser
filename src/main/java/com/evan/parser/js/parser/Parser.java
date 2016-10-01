@@ -111,6 +111,10 @@ public class Parser {
 
 	private FunctionExp getFunctionExp(Tokens tokens) {
 		// function = <id> ( '()' | ( '(' paramlist ')' ) )
+
+		// TODO add checkpoint here, so when it's not a function exp, we can
+		// revert back
+
 		IdExp id = getIdExp(tokens, false);
 
 		if (id != null) {
