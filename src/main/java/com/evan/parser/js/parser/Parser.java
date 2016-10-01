@@ -46,14 +46,14 @@ public class Parser {
 	//
 	// expList = exp*
 	//
-	public static Exp parse(List<Token> tokenList) {
+	public Exp parse(List<Token> tokenList) {
 		Tokens tokens = new Tokens(tokenList);
 
 		// TODO
 		return getExpList(tokens);
 	}
 
-	private static StringExp getStringExp(Tokens tokens) {
+	private StringExp getStringExp(Tokens tokens) {
 		Token t = tokens.current();
 
 		if (t != null && t.getType() == TokenTypeEnum.STRING) {
@@ -66,7 +66,7 @@ public class Parser {
 		}
 	}
 
-	private static NumberExp getNumberExp(Tokens tokens) {
+	private NumberExp getNumberExp(Tokens tokens) {
 		Token t = tokens.current();
 
 		if (t != null) {
@@ -88,12 +88,12 @@ public class Parser {
 		}
 	}
 
-	private static IdExp getIdExp(Tokens tokens) {
+	private IdExp getIdExp(Tokens tokens) {
 		return getIdExp(tokens, true);
 
 	}
 
-	private static IdExp getIdExp(Tokens tokens, boolean isForward) {
+	private IdExp getIdExp(Tokens tokens, boolean isForward) {
 		Token t = tokens.current();
 		if (t != null && t.getType() == TokenTypeEnum.ID) {
 			String value = ((IdToken) t).getValue();
@@ -109,14 +109,15 @@ public class Parser {
 
 	}
 
-	private static FunctionExp getFunctionExp(Tokens tokens) {
+	private FunctionExp getFunctionExp(Tokens tokens) {
 		// function = <id> ( '()' | ( '(' paramlist ')' ) )
 		IdExp id = getIdExp(tokens, false);
 
 		if (id != null) {
-			Token lb = tokens.current();
+			Token lb = tokens.next();
 
 			if (lb != null && lb instanceof SymbolToken && ((SymbolToken) lb).getValue().charValue() == '(') {
+				// forward ID & lb
 				tokens.forward();
 
 				Token rb = tokens.next();
@@ -149,7 +150,7 @@ public class Parser {
 		}
 	}
 
-	private static List<Exp> getParamList(Tokens tokens) {
+	private List<Exp> getParamList(Tokens tokens) {
 		// paramlist = exp (',' exp )*
 		Exp exp = getValueExp(tokens);
 
@@ -182,7 +183,7 @@ public class Parser {
 		}
 	}
 
-	private static Exp getTerm(Tokens tokens) {
+	private Exp getTerm(Tokens tokens) {
 		// Term = <string> | <数字> | Function | <变量> | “(”Exp”)”
 
 		StringExp string = getStringExp(tokens);
@@ -239,7 +240,7 @@ public class Parser {
 
 	}
 
-	private static Exp getFactor(Tokens tokens) {
+	private Exp getFactor(Tokens tokens) {
 		// Factor = Term ((“*” | “/”) Term)*
 		Exp factor = getTerm(tokens);
 
@@ -270,7 +271,7 @@ public class Parser {
 
 	}
 
-	private static Exp getValueExp(Tokens tokens) {
+	private Exp getValueExp(Tokens tokens) {
 		// Exp = Factor ((“+” | “-”) Factor)*
 		Exp exp = getFactor(tokens);
 
@@ -300,7 +301,7 @@ public class Parser {
 		return exp;
 	}
 
-	private static Exp getAssignExp(Tokens tokens) {
+	private Exp getAssignExp(Tokens tokens) {
 		// assignExp ::= <id> "=" <valueExp>
 		IdExp id = getIdExp(tokens);
 
@@ -330,7 +331,7 @@ public class Parser {
 
 	}
 
-	private static Exp getExp(Tokens tokens) {
+	private Exp getExp(Tokens tokens) {
 		// exp = valueExp | assignExp
 		Exp exp = getValueExp(tokens);
 
@@ -343,7 +344,7 @@ public class Parser {
 		return exp;
 	}
 
-	private static Exp getExpList(Tokens tokens) {
+	private Exp getExpList(Tokens tokens) {
 		// expList = exp (, exp )*
 		ExpListExp ele = new ExpListExp();
 

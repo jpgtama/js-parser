@@ -39,16 +39,22 @@ public class ExpListExp extends Exp {
 	@Override
 	public String toString() {
 
-		StringBuffer sb = new StringBuffer();
+		if (expList.size() > 0) {
+			StringBuffer sb = new StringBuffer();
 
-		for (Exp e : expList) {
-			sb.append(e.toString());
-			sb.append(' ');
+			for (Exp e : expList) {
+				sb.append(e.toString());
+				sb.append(' ');
+			}
+
+			sb.deleteCharAt(sb.length() - 1);
+
+			return String.format("(expList %s)", sb.toString());
+
+		} else {
+			return "(expList )";
 		}
 
-		sb.deleteCharAt(sb.length() - 1);
-
-		return String.format("(expList %s)", sb.toString());
 	}
 
 }

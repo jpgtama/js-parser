@@ -40,7 +40,7 @@ public class ParserTest {
 						System.arraycopy(charArray, 0, dest, 0, index);
 						index = 0;
 
-						System.out.println(Parser.parse(Lexer.lex(dest)));
+						System.out.println((new Parser()).parse(Lexer.lex(dest)));
 
 					} catch (Exception e) {
 						e.printStackTrace();
