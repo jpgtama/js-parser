@@ -80,9 +80,11 @@ public class Lexer {
 		char c = input.current();
 
 		// special handle for '-' and negative number
-		if (c == '-' && input.hasNext() && Pattern.test("[0-9]", input.next())) {
-			return null;
-		} else if ("+-*/(),=[].{}:".contains(String.valueOf(c))) {
+//		if (c == '-' && input.hasNext() && Pattern.test("[0-9]", input.next())) {
+//			return null;
+//		} else
+
+		if ("+-*/(),=[].{}:".contains(String.valueOf(c))) {
 			Token token = new SymbolToken(c, input.getIndex());
 			input.forward();
 			return token;
@@ -130,7 +132,7 @@ public class Lexer {
 		while (input.hasNext()) {
 			char c = input.current();
 
-			if (state == 0 && Pattern.test("[\\-0-9]", c)) {
+			if (state == 0 && Pattern.test("[0-9]", c)) {
 				state = 1;
 			} else if (state == 1 && Pattern.test("[0-9]", c)) {
 				state = 1;

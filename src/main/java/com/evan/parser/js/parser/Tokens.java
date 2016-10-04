@@ -17,6 +17,8 @@ public class Tokens {
 
 	private int index;
 
+	private int checkPoint;
+
 	/**
 	 * @param tokenList
 	 */
@@ -87,6 +89,17 @@ public class Tokens {
 	 */
 	public void setIndex(int index) {
 		this.index = index;
+	}
+
+
+	public Tokens setCheckPoint(){
+		this.checkPoint = this.index;
+		return this;
+	}
+
+	public Tokens revertToCheckPoint(){
+		this.index = this.checkPoint;
+		return this;
 	}
 
 }

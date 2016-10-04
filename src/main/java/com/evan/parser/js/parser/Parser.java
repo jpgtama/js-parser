@@ -114,17 +114,15 @@ public class Parser {
 
 		// TODO add checkpoint here, so when it's not a function exp, we can
 		// revert back
-
-		IdExp id = getIdExp(tokens, false);
+		tokens.setCheckPoint();
+		IdExp id = getIdExp(tokens);
 
 		if (id != null) {
-			Token lb = tokens.next();
+			Token lb = tokens.current();
+			tokens.forward();
 
 			if (lb != null && lb instanceof SymbolToken && ((SymbolToken) lb).getValue().charValue() == '(') {
-				// forward ID & lb
-				tokens.forward();
-
-				Token rb = tokens.next();
+				Token rb = tokens.current();
 				if (rb != null && rb instanceof SymbolToken && ((SymbolToken) rb).getValue().charValue() == ')') {
 					// no param
 					tokens.forward();
@@ -133,23 +131,27 @@ public class Parser {
 					List<Exp> paramlist = getParamList(tokens);
 
 					if (paramlist != null && paramlist.size() > 0) {
-						rb = tokens.next();
+						rb = tokens.current();
 						if (rb != null && rb instanceof SymbolToken && ((SymbolToken) rb).getValue().charValue() == ')') {
 							tokens.forward();
 							return new FunctionExp(id.getValue(), paramlist);
 						} else {
+							tokens.revertToCheckPoint();
 							throw new RuntimeException("no ')' after param list of function: " + id.getValue());
 						}
 					} else {
+						tokens.revertToCheckPoint();
 						throw new RuntimeException("no param list for function: " + id.getValue());
 					}
 
 				}
 
 			} else {
+				tokens.revertToCheckPoint();
 				return null;
 			}
 		} else {
+			tokens.revertToCheckPoint();
 			return null;
 		}
 	}
