@@ -3,6 +3,8 @@
  */
 package com.evan.parser.js.parser.exp;
 
+import com.evan.parser.js.parser.Result;
+
 /**
  * @author evan
  *
@@ -31,7 +33,7 @@ public class NumberExp<T extends Number> extends Exp {
 	 * @see com.evan.parser.js.parser.exp.Exp#interpret()
 	 */
 	@Override
-	public T interpret() {
+	public Result interpret() {
 		// TODO Auto-generated method stub
 		return null;
 	}

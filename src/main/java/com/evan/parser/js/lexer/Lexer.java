@@ -33,14 +33,33 @@ public class Lexer {
 		// parse
 		while (input.hasNext()) {
 			Token t = null;
-			if ((t = getSymbolToken(input)) != null || (t = getIdToken(input)) != null || (t = getNumberToken(input)) != null
-					|| (t = getStringToken(input)) != null) {
+			
+			if((t = getSymbolToken(input)) != null){
 				tokens.add(t);
-			} else if ((t = getSpaceToken(input)) != null) {
-				// ignore space
-			} else {
-				throw new RuntimeException("Invalid character at " + input.getIndex() + ": " + input.current());
+				break;
 			}
+			
+			if((t = getIdToken(input)) != null){
+				tokens.add(t);
+				break;
+			}
+			
+			if((t = getNumberToken(input)) != null){
+				tokens.add(t);
+				break;
+			}
+			
+			if((t = getStringToken(input)) != null){
+				tokens.add(t);
+				break;
+			}
+			
+			if((t = getSpaceToken(input)) != null){
+				// ignore space
+				break;
+			}
+
+			throw new RuntimeException("Invalid character at " + input.getIndex() + ": " + input.current());
 		}
 
 		return tokens;

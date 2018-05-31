@@ -3,6 +3,8 @@
  */
 package com.evan.parser.js.parser.exp;
 
+import com.evan.parser.js.parser.Result;
+
 /**
  * @author evan
  *
@@ -32,8 +34,14 @@ public class ArithmeticExp extends Exp {
 	 * @see com.evan.parser.js.parser.exp.Exp#interpret()
 	 */
 	@Override
-	public Object interpret() {
-		// TODO Auto-generated method stub
+	public Result interpret() {
+		if("+".equals(op)){
+			
+//			return left.interpret() + right.interpret();
+		}
+		
+		
+		
 		return null;
 	}
 
